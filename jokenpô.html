@@ -8,62 +8,95 @@
 <!-- ------------------ CSS ------------------- -->
 <style>
 
+    body{
+        background-color: black;
+        color: rgb(0, 255, 55);
+    }
+
     #cabeçalho{
         display: flex;
         justify-content: center;
         font-size: 70px;
+        margin: 10px;
     }
 
     #divmae{
         display: flex;
         flex-direction: column;
         align-items: center;
+        font-size: 30px;
     }
 
     .botoes{
-        border-radius: 20px;
-        width: 120px;
-        height: 120px;
+        color: rgb(0, 255, 55);;
+        background-color: transparent;
+        border-color: transparent;
+        font-size: 100px;
         cursor: pointer;
         transition: 600ms;
     }
 
     .botoes:hover{
-        width: 150px;
-        height: 150px;
-    }
-
-    .fa-hand-scissors, .fa-hand-back-fist, .fa-hand{
-    font-size: 70px;
+        font-size: 150px;
     }
 
     #escolha2{
-        display: none;
+        text-align: center;
     }
 
     #jogador{
         display: flex;
         justify-content: space-evenly;
+        height: 250px;
+        align-items: flex-end;
     }
-    
+
+    #pontos{
+        display: flex;
+        justify-content: space-evenly;
+        font-size: 60px;
+        height: 200px;
+        align-items: center;
+    }
+
+    #sair{
+        position: absolute;
+        display: flex;
+        align-items: center;
+        flex-direction: row-reverse;
+        font-size: 27px;
+    }
+
+    @keyframes roda-roda {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+    }
+
+    #botaosair{
+        color: red;
+        background-color: transparent;
+        border-color: transparent;
+        font-size: 50px;
+        cursor: pointer;
+        transition: 600ms;
+    }
+
+    #botaosair:hover{
+        font-size: 80px;
+        animation: roda-roda .9s alternate linear(0 0%, 0 1.8%, 0.01 3.6%, 0.03 6.35%, 0.07 9.1%, 0.13 11.4%, 0.19 13.4%, 0.27 15%, 0.34 16.1%, 0.54 18.35%, 0.66 20.6%, 0.72 22.4%, 0.77 24.6%, 0.81 27.3%, 0.85 30.4%, 0.88 35.1%, 0.92 40.6%, 0.94 47.2%, 0.96 55%, 0.98 64%, 0.99 74.4%, 1 86.4%, 1 100%);
+    }
+
     #façasuaescolha{
         text-align: center;
+        font-size: 50px;
+        margin-top: 2%;
     }
 
-    #pontosj1{
-        display: flex;
-        justify-content: center;
-        width: 46%;
-        position: absolute;
-        font-size: 100px;
-    }
-
-    #pontosj2{
-        display: flex;
-        width: 78%;
-        justify-content: flex-end;
-        font-size: 100px;
-    }
+    @media only screen and (max-width: 700px) {
+        #cabeçalho {
+          display: none;
+        }
+      }
 
 </style>
 
@@ -71,24 +104,31 @@
 
     <h1 id="cabeçalho"> Jokenpô </h1>
 
-    <div id="pontosj1"> 0 </div>
-    <div id="pontosj2"> 0 </div>
+    <div id="sair">
+        <button id="botaosair" onclick="fim()"> <i class="fa-solid fa-arrow-right-from-bracket"></i> </button>
+        <label>Encerrar jogo:</label>
+    </div>
+
+    <div id="pontos"> 
+        <p id="pontosv"> </p>
+        <p id="pontose"> </p>
+        <p id="pontosd"> </p>
+    </div>
 
     <div id="divmae">
 
-        <h1 id="escolha2"> Escolha do seu adversário: </h1>
-
-        <div id="jogador2"> </div>
+        <h2 id="escolha2"> </h2>
+        <h3 id="escolhacpu"></h3>
 
     </div>
 
-    <h1 id="façasuaescolha"> Faça sua escolha: </h1>
+    <div id="jogador">
+        <button class="botoes" onclick="Jokenpô(0)"> <i class="fa-regular fa-hand-scissors"></i> </button>
+        <button class="botoes" onclick="Jokenpô(1)"> <i class="fa-regular fa-hand-back-fist"></i> </button>
+        <button class="botoes" onclick="Jokenpô(2)"> <i class="fa-regular fa-hand"></i> </button>
+    </div>
 
-        <div id="jogador">
-            <button class="botoes" onclick="Jokenpô(0)"> <i class="fa-regular fa-hand-scissors"></i> </button>
-            <button class="botoes" onclick="Jokenpô(1)"> <i class="fa-regular fa-hand-back-fist"></i> </button>
-            <button class="botoes" onclick="Jokenpô(2)"> <i class="fa-regular fa-hand"></i> </button>
-        </div>
+    <div id="façasuaescolha"> Faça sua escolha </div>
     
 </body>
 
@@ -107,6 +147,7 @@
     
     function Jokenpô(numero) {
         var jogador = numero
+        var jogadas = ['Tesoura','Pedra','Papel']
         var cpu = jogadacpu(0,2)
 
         if (
@@ -114,30 +155,45 @@
             (jogador == 1 && cpu == 2) ||
             (jogador == 2 && cpu == 0)) {
             pontoscpu ++
-            console.log('Você perdeu');
-            console.log(pontoscpu);
+            document.getElementById('escolha2').innerHTML = ('Você Perdeu');
+            document.getElementById('escolhacpu').innerHTML = ('Seu adversário escolheu:   ' + jogadas[cpu]);
+            document.getElementById('pontosd').innerHTML = ('Derrotas:   ' + pontoscpu);
         }
         else if(
             (jogador == 0 && cpu == 2) ||
             (jogador == 1 && cpu == 0) ||
             (jogador == 2 && cpu == 1)) {
             pontosjogador ++
-            console.log('Você Ganhou');
-            console.log(pontosjogador);
+            document.getElementById('escolha2').innerHTML = ('Você Ganhou');
+            document.getElementById('escolhacpu').innerHTML = ('Seu adversário escolheu:   ' + jogadas[cpu]);
+            document.getElementById('pontosv').innerHTML = ('Vitórias:   ' + pontosjogador);
         }
         else{
-            console.log('Empate');
             empate ++
-            console.log(empate);
-            
+            document.getElementById('escolha2').innerHTML = ('Empate');
+            document.getElementById('escolhacpu').innerHTML = ('Seu adversário escolheu:   ' + jogadas[cpu]);
+            document.getElementById('pontose').innerHTML = ('Empates:   ' + empate);
         }
-        
-
-        // console.log(cpu);
-        // console.log(jogador);
-        
-        
     }
+
+    function fim() {
+        // abre modal com dados
+        alert('Você finalizou o jogo')
+
+        pontoscpu = 0
+        pontosjogador = 0
+        empate = 0
+
+        document.getElementById('pontosd').innerHTML = ('Derrotas:   ' + pontoscpu);
+        document.getElementById('pontosv').innerHTML = ('Vitórias:   ' + pontosjogador);
+        document.getElementById('pontose').innerHTML = ('Empates:   ' + empate);
+        document.getElementById('escolhacpu').innerHTML = ('');
+        document.getElementById('escolha2').innerHTML = ('');
+    }
+
+    document.getElementById('pontosd').innerHTML = ('Derrotas:   ' + pontoscpu);
+    document.getElementById('pontosv').innerHTML = ('Vitórias:   ' + pontosjogador);
+    document.getElementById('pontose').innerHTML = ('Empates:   ' + empate);
 
 </script>
 
